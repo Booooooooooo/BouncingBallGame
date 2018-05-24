@@ -19,17 +19,16 @@ public class BallPanel extends JPanel {
     private int ballNum = 0;
     private int speed = 0;
     private RepaintTimer timer;
+    private ResultWin resultWin;
+    private boolean isLose = false;
 
     public BallPanel(JFrame window) {
         parentWindow = window; // set parent window of JPanel
         threadExecutor = Executors.newCachedThreadPool();
 
         label = new JLabel("分数:");
-        label.setFont(new Font("Dialog", Font.PLAIN, 14));
+        label.setFont(new Font("Dialog", Font.PLAIN, 20));
         add(label);
-        /*if(ballNum == 0 || ball[ballNum - 1].getScore() >= ballNum * 5){
-            createBall();
-        }*/
         createBall();
         timer = new RepaintTimer(parentWindow);
         threadExecutor.execute(timer);
@@ -66,25 +65,26 @@ public class BallPanel extends JPanel {
         for(int i = 0; i < ballNum; i++){
             g.setColor(ball[i].getColor());
             g.fillOval(ball[i].getX(), ball[i].getY(), 15, 15);
-            /*if(getMousePosition().x < getLocation().x){
-                ball[i].setRackx(getLocation().x);
-            }*/
             ball[i].setRackx(getMousePosition().x);
-            ball[i].setLast(false);
+            //ball[i].setLast(false);
             sc += ball[i].getScore();
         }
-
-        //boolean flag = false;
+        boolean flag = false;
         for(int i = 0; i < ballNum; i++){
             if(ball[i].isLose()){
+                flag = true;
                 timer.setStop(true);
-                JOptionPane.showMessageDialog(null, "对不起您输了\n您的分数是：" + sc);
+                JOptionPane.showMessageDialog(null, "对不起，您输了");
                 break;
+            }
+        }
+        if(flag){
+            for(int i = 0; i < ballNum; i++){
+                ball[i].setLose(true);
             }
         }
 
 
-        //ball[ballNum - 1].setLast(true);
         g.setColor(Color.black);
         g.fillRect(getMousePosition().x, MAX_Y - 20, 60, 10);
         label.setText("分数： " + sc);
@@ -92,6 +92,10 @@ public class BallPanel extends JPanel {
             createBall();
         }
 
+    }
+
+    public boolean getIsLose(){
+        return isLose;
     }
 }
 

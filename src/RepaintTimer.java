@@ -13,7 +13,7 @@ public class RepaintTimer implements Runnable {
    }
    
    public void run() {
-      while (!stop) {
+      while (stop == false) {
          try {
             Thread.sleep(20);
          }
