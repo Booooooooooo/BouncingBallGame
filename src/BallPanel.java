@@ -60,21 +60,26 @@ public class BallPanel extends JPanel {
    // draw ball at current position
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        ImageIcon icon = new ImageIcon("bg.jpg");
+        Image img = icon.getImage();
+        g.drawImage(img, 0, 0, icon.getIconWidth(), icon.getIconHeight(), icon.getImageObserver());
 
         int sc = 0;
         for(int i = 0; i < ballNum; i++){
             g.setColor(ball[i].getColor());
             g.fillOval(ball[i].getX(), ball[i].getY(), 15, 15);
             ball[i].setRackx(getMousePosition().x);
+            ball[i].setRacky(getMousePosition().y);
             //ball[i].setLast(false);
             sc += ball[i].getScore();
         }
         boolean flag = false;
         for(int i = 0; i < ballNum; i++){
             if(ball[i].isLose()){
-                flag = true;
                 timer.setStop(true);
-                JOptionPane.showMessageDialog(null, "对不起，您输了");
+                //label.setText("对不起，您输了");
+                JOptionPane.showMessageDialog(null, "对不起，您输了\n您的分数是：" + sc);
+                flag = true;
                 break;
             }
         }
@@ -85,8 +90,8 @@ public class BallPanel extends JPanel {
         }
 
 
-        g.setColor(Color.black);
-        g.fillRect(getMousePosition().x, MAX_Y - 20, 60, 10);
+        g.setColor(Color.yellow);
+        g.fillRect(getMousePosition().x, getMousePosition().y, 30, 30);
         label.setText("分数： " + sc);
         if(sc > ballNum * 5){
             createBall();

@@ -10,13 +10,14 @@ public class Ball implements Runnable {
    private int dx; // change in horizontal position of ball
    private int dy;
    private int rackx;
+   private int racky;
    private int score = 0;
    private final int BALL_SIZE = 15;
    private final int MAX_X = 500; // horizontal edge of JPanel
    private final int MAX_Y = 500; // vertical edge of JPanel
     private final int RACKET_Y = MAX_Y - 20;
-    private final int RACKET_HEIGHT = 10;
-    private final int RACKET_WIDTH = 60;
+    private final int RACKET_HEIGHT = 30;
+    private final int RACKET_WIDTH = 30;
    private static final Random generator = new Random();
    private Color color;
    private boolean isLose;
@@ -38,7 +39,7 @@ public class Ball implements Runnable {
 
    private Color createRandomColor(){
       Random rand = new Random();
-      return new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+      return new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat()).darker();
    }
 
    // bounces ball perpetually until window is closed
@@ -57,17 +58,16 @@ public class Ball implements Runnable {
 
          // if bounce off left or right of JPanel
          if (x <= 0 || x >= MAX_X - BALL_SIZE) {
-            dx = -dx; // reverse velocity in x direction
+            dx = -dx;
+            score ++;// reverse velocity in x direction
          }
-
-         if(y >= RACKET_Y - BALL_SIZE && (x < rackx || x > rackx + RACKET_WIDTH)){
-             isLose = true;
-             break;
-         }else if(y <= 0){
-            dy = -dy;
-         }else if(y >= RACKET_Y - BALL_SIZE && x > rackx && x <= rackx + RACKET_WIDTH){
+         if(y >= RACKET_Y - BALL_SIZE || y <= 0){
              dy = -dy;
              score++;
+         }
+         if(y >= racky && y <= racky + RACKET_HEIGHT && x >= rackx && x <= rackx + RACKET_WIDTH){
+             isLose = true;
+             break;
          }
 
          /*if(isLose){
@@ -95,6 +95,10 @@ public class Ball implements Runnable {
 
    public void setRackx(int rx){
        rackx = rx;
+   }
+
+   public void setRacky(int ry){
+       racky = ry;
    }
 
    public int getScore(){
